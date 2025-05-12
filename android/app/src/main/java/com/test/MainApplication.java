@@ -10,6 +10,7 @@ import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.soloader.SoLoader;
 import java.util.List;
 import com.test.CurrentVolumePackage; // import this
+import com.test.BuildConfig; // Adjust "com.test" to match your app's actual package
 
 
 public class MainApplication extends Application implements ReactApplication {
@@ -27,11 +28,13 @@ public class MainApplication extends Application implements ReactApplication {
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
-           return Arrays.<ReactPackage>asList(
-        new MainReactPackage(),
-        new CurrentVolumePackage() // add this line
-    );
+    //        return Arrays.<ReactPackage>asList(
+    //     // new MainReactPackage(),
+    //     new CurrentVolumePackage() // add this line
+    // );
           packages.add(new DebugModePackage());
+              packages.add(new CurrentVolumePackage());
+
           // new DeviceInfoPackage() ;// Register the package here
 // return Arrays.asList(
 //     new MainReactPackage(),

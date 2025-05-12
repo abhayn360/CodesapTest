@@ -31,4 +31,20 @@ public class CurrentVolumeModule extends ReactContextBaseJavaModule {
             promise.reject("VOLUME_ERROR", "Failed to get current volume", e);
         }
     }
+    @ReactMethod
+public void setMediaVolume(int volume, Promise promise) {
+    try {
+        AudioManager audioManager = (AudioManager) reactContext.getSystemService(Context.AUDIO_SERVICE);
+        int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        
+        // Clamp the volume to valid range
+        int newVolume = Math.max(0, Math.min(volume, maxVolume));
+        
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, newVolume, 0);
+        promise.resolve("Volume set to " + newVolume);
+    } catch (Exception e) {
+        promise.reject("SET_VOLUME_ERROR", "Failed to set volume", e);
+    }
+}
+
 }

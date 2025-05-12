@@ -1,35 +1,27 @@
+package com.test; // Make sure this matches your app's package
+
+import android.util.Log;
+
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Callback;
+import com.test.BuildConfig; // <-- This is the important part
 
 public class DebugModeModule extends ReactContextBaseJavaModule {
-    private ReactApplicationContext reactContext;
 
     public DebugModeModule(ReactApplicationContext reactContext) {
         super(reactContext);
-        this.reactContext = reactContext;
     }
 
     @Override
     public String getName() {
-        return "DebugModeModule";
-    }
-
-    @ReactMethod(isBlockingSynchronousMethod = true)
-    public boolean isDebugModeEnabled() {
-        return BuildConfig.DEBUG;
+        return "DebugMode";
     }
 
     @ReactMethod
-    public void getDeviceInfo(Callback successCallback) {
-        try {
-            String deviceInfo = android.os.Build.MANUFACTURER + " " + 
-                                android.os.Build.MODEL + 
-                                " (Android " + android.os.Build.VERSION.RELEASE + ")";
-            successCallback.invoke(deviceInfo, BuildConfig.DEBUG);
-        } catch (Exception e) {
-            successCallback.invoke("Unknown Device", false);
-        }
+    public void isDebugMode(Callback successCallback) {
+        boolean isDebug = BuildConfig.DEBUG;
+        successCallback.invoke(isDebug);
     }
 }

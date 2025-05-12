@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, Button, NativeModules, TouchableOpacity } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, Button, NativeModules, TouchableOpacity, View } from 'react-native';
 import { DebugUtils } from './src/DebugUtils';
 const { BatteryModule ,DeviceInfo} = NativeModules;
 
@@ -20,6 +20,7 @@ console.log('deviceNamedeviceName',deviceName);
       setBatteryLevel(level);
     });
   };
+ 
   // useEffect(() => {
   //   getBatteryLevel();
 
@@ -39,6 +40,8 @@ console.log('deviceNamedeviceName',deviceName);
     // Check debug mode on component mount
     const checkDebugMode = async () => {
       const debugStatus = DebugUtils.isDebugModeEnabled();
+      console.log('debugStatus',debugStatus);
+      
       setIsDebug(debugStatus);
       
       // Optional: Log debug status
@@ -49,19 +52,82 @@ console.log('deviceNamedeviceName',deviceName);
   }, []);
 
   const { CurrentVolume } = NativeModules;
+  const [volume,setVolume]=useState(0)
 
 CurrentVolume.getCurrentVolume()
   .then(volume => {
     console.log('Current volume:', volume);
+    setVolume(volume)
   })
   .catch(error => {
     console.error('Error getting volume:', error);
   });
+   const refreshVolume = async () => {
+  try {
+    const volume = await CurrentVolume.getCurrentVolume();
+    console.log('Current volume:', volume);
+    // You can update state if needed
+    setVolume(volume);
+  } catch (error) {
+    console.error('Error getting volume:', error);
+  }
+};
+console.log('isdebug',isDebug);
+const increaseVolume = async () => {
+  try {
+    await CurrentVolume.setMediaVolume(volume+1); // set volume to level 7
+    refreshVolume()
+    console.log('Volume updated');
+  } catch (err) {
+    console.error(err);
+  }
+};
+const DecreaseVol = async () => {
+  try {
+    await CurrentVolume.setMediaVolume(volume-1); // set volume to level 7
+    refreshVolume()
+    console.log('Volume updated');
+  } catch (err) {
+    console.error(err);
+  }
+};
   return (
     <SafeAreaView style={styles.container}>
       {/* <TouchableOpacity */}
-      <Text style={styles.welcome}>Battery Level: {batteryLevel}</Text>
-      <Button title="Refresh Battery Level" onPress={getBatteryLevel} />
+      <Text style={styles.welcome}>Battery Level: {batteryLevel} %</Text>
+      <Text >Current volume :  {volume}</Text>
+      <Text >App Is Debug :  {isDebug}</Text>
+
+
+<TouchableOpacity onPress={()=>{
+  getBatteryLevel()
+  refreshVolume()
+}} 
+style={{backgroundColor:'#000',marginTop:20,padding:20,borderRadius:20}}
+>
+
+  <Text style={{color:'#fff'}}> Refresh all data</Text>
+</TouchableOpacity>
+<View style={{justifyContent:'space-between',flexDirection:'row',}}>
+ <TouchableOpacity onPress={()=>{
+  increaseVolume()
+}} 
+style={{backgroundColor:'#000',marginTop:20,padding:20,borderRadius:20,}}
+>
+
+  <Text style={{color:'#fff'}}> increase volume</Text>
+</TouchableOpacity>
+ <TouchableOpacity onPress={()=>{
+  DecreaseVol()
+}} 
+style={{backgroundColor:'#000',marginTop:20,padding:20,borderRadius:20,marginLeft:5}}
+>
+
+  <Text style={{color:'#fff'}}> DecreaseVolume</Text>
+</TouchableOpacity>
+</View>
+    
+      
     </SafeAreaView>
   );
 };
