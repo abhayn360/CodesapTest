@@ -9,6 +9,8 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.soloader.SoLoader;
 import java.util.List;
+import com.test.CurrentVolumePackage; // import this
+
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -21,12 +23,29 @@ public class MainApplication extends Application implements ReactApplication {
 
         @Override
         protected List<ReactPackage> getPackages() {
+        
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
-          // packages.add(new MyReactNativePackage());
+           return Arrays.<ReactPackage>asList(
+        new MainReactPackage(),
+        new CurrentVolumePackage() // add this line
+    );
+          packages.add(new DebugModePackage());
+          // new DeviceInfoPackage() ;// Register the package here
+// return Arrays.asList(
+//     new MainReactPackage(),
+//     new DebugModePackage() // Add this line
+//   );
+                                      packages.add(new BatteryPackage());
+                                                //  packages.add( new DeviceInfoPackage()) ;     // Register your package here
+
+
+
           return packages;
         }
+      
+
 
         @Override
         protected String getJSMainModuleName() {
